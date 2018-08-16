@@ -1,0 +1,88 @@
+<description schematron="static-repository.sch"
+             xmlns="http://www.jenitennison.com/xslt/xspec"
+             xmlns:oai="http://www.openarchives.org/OAI/2.0/"
+             xmlns:oai-static="http://www.openarchives.org/OAI/2.0/static-repository">
+  <scenario label="The Static Repository must not use sets">
+    <context>
+      <oai-static:ListRecords>
+        <oai:record>
+          <oai:header>
+            <oai:setSpec>Foobar</oai:setSpec>
+          </oai:header>
+        </oai:record>
+      </oai-static:ListRecords>
+    </context>
+    <expect-assert id="oai.3.2.6"/>
+  </scenario>
+  <scenario label="The Static Repository must not include headers for deleted records">
+    <context>
+      <oai-static:ListRecords>
+        <oai:record>
+          <oai:header status="deleted"/>
+        </oai:record>
+      </oai-static:ListRecords>
+    </context>
+    <expect-assert id="oai.3.2.7"/>
+  </scenario>
+  <scenario label="The Static Repository must not claim to support response compression">
+    <context>
+      <oai-static:Identify>
+        <oai:compression>deflate</oai:compression>
+      </oai-static:Identify>
+    </context>
+    <expect-assert id="oai.3.2.8"/>
+  </scenario>
+  <scenario label="The Static Repository must express all datestamps using YYYY-MM-DD granularity">
+    <scenario label="This must be specified as the harvesting granularity in the granularity element">
+      <context>
+        <oai-static:Identify>
+          <oai:granularity>YYYY-MM-DDTHH:mm:ssZ</oai:granularity>
+        </oai-static:Identify>
+      </context>
+      <expect-assert id="oai.3.2.9a"/>
+    </scenario>
+    <scenario label="This must be true for the earliestDatestamp element">
+      <context>
+        <oai-static:Identify>
+          <oai:granularity>YYYY-MM-DD</oai:granularity>
+          <oai:earliestDatestamp>2000-01-01T00:00:00Z</oai:earliestDatestamp>
+        </oai-static:Identify>
+      </context>
+      <expect-assert id="oai.3.2.9b"/>
+    </scenario>
+        <scenario label="This must be true for every datestamp element">
+          <context>
+            <oai-static:ListRecords>
+              <oai:record>
+                <oai:header>
+                  <oai:datestamp>2000-01-01T00:00:00Z</oai:datestamp>
+                </oai:header>
+              </oai:record>
+            </oai-static:ListRecords>
+          </context>
+      <expect-assert id="oai.3.2.9b"/>
+    </scenario>
+  </scenario>
+  <scenario label="The Static Repository must be a single XML file, it must not include any resumptionToken elements">
+    <context>
+      <oai-static:ListRecords>
+        <oai:resumptionToken/>
+      </oai-static:ListRecords>
+    </context>
+    <expect-assert id="oai.3.2.10"/>
+  </scenario>
+  <scenario label="The Static Repository must list all metadata formats used">
+    <context>
+      <oai-static:Repository>
+        <oai-static:ListMetadataFormats>
+          <oai:metadataFormat>
+            <oai:metadataPrefix>mods</oai:metadataPrefix>
+          </oai:metadataFormat>
+        </oai-static:ListMetadataFormats>
+        <oai-static:ListRecords metadataPrefix="oai_dc"/>
+        <oai-static:ListRecords metadataPrefix="mods"/>
+      </oai-static:Repository>
+    </context>
+    <expect-assert id="oai.x.1" count="1"/>
+  </scenario>
+</description>
