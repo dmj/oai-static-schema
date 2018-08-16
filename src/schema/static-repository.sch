@@ -51,7 +51,9 @@
   </pattern>
   <pattern>
     <rule context="oai-static:ListRecords">
-      <assert test="some $m in ../oai-static:ListMetadataFormats/oai:metadataFormat satisfies $m/oai:metadataPrefix = @metadataPrefix" id="oai.x.1"/>
+      <assert test="some $m in ../oai-static:ListMetadataFormats/oai:metadataFormat satisfies $m/oai:metadataPrefix = @metadataPrefix" id="oai.x.1">
+        The Static Repository must list all metadata formats used.
+      </assert>
     </rule>
   </pattern>
 </schema>
